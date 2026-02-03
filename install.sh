@@ -56,7 +56,7 @@ check_glibc_version
 echo ""
 echo -e "${yellow}---------->>>>>当前系统的架构为: $(arch)${plain}"
 echo ""
-last_version=$(curl -Ls "https://api.github.com/repos//3x-ui/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+last_version=$(curl -Ls "https://api.github.com/repos/huiyio/3x-ui/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
 # 获取 x-ui 版本
 xui_version=$(/usr/local/x-ui/x-ui -v)
 
@@ -229,7 +229,7 @@ install_x-ui() {
     cd /usr/local/
 
     if [ $# == 0 ]; then
-        last_version=$(curl -Ls "https://api.github.com/repos/sinian-liu/3x-ui/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+        last_version=$(curl -Ls "https://api.github.com/repos/huiyio/3x-ui/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
         if [[ ! -n "$last_version" ]]; then
             echo -e "${red}获取 3x-ui 版本失败，可能是 Github API 限制，请稍后再试${plain}"
             exit 1
@@ -246,14 +246,14 @@ install_x-ui() {
         echo -e "${green}---------------->>>>>>>>>>>>>>>>>>>>>安装进度100%${plain}"
         echo ""
         sleep 2
-        wget -N --no-check-certificate -O /usr/local/x-ui-linux-$(arch).tar.gz https://github.com/sinian-liu/3x-ui/releases/download/${last_version}/x-ui-linux-$(arch).tar.gz
+        wget -N --no-check-certificate -O /usr/local/x-ui-linux-$(arch).tar.gz https://github.com/huiyio/3x-ui/releases/download/${last_version}/x-ui-linux-$(arch).tar.gz
         if [[ $? -ne 0 ]]; then
             echo -e "${red}下载 3x-ui 失败, 请检查服务器是否可以连接至 GitHub？ ${plain}"
             exit 1
         fi
     else
         last_version=$1
-        url="https://github.com/sinian-liu/3x-ui/releases/download/${last_version}/x-ui-linux-$(arch).tar.gz"
+        url="https://github.com/huiyio/3x-ui/releases/download/${last_version}/x-ui-linux-$(arch).tar.gz"
         echo ""
         echo -e "--------------------------------------------"
         echo -e "${green}---------------->>>>开始安装 3x-ui $1${plain}"
@@ -294,7 +294,7 @@ install_x-ui() {
 
     chmod +x x-ui bin/xray-linux-$(arch)
     cp -f x-ui.service /etc/systemd/system/
-    wget --no-check-certificate -O /usr/bin/x-ui https://raw.githubusercontent.com/sinian-liu/3x-ui/main/x-ui.sh
+    wget --no-check-certificate -O /usr/bin/x-ui https://raw.githubusercontent.com/huiyio/3x-ui/main/x-ui.sh
     chmod +x /usr/local/x-ui/x-ui.sh
     chmod +x /usr/bin/x-ui
     sleep 2
@@ -348,44 +348,30 @@ install_x-ui() {
     sleep 3
     echo -e ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
     echo ""
-echo -e "${yellow}----->>>3X-UI面板和Xray启动成功<<<-----${plain}"
+    echo -e "${yellow}----->>>3X-UI面板和Xray启动成功<<<-----${plain}"
 }
 install_base
 install_x-ui $1
 echo ""
 echo -e "----------------------------------------------"
-echo -e "${green}安装/更新完成${plain}"
-echo -e "面板配置信息："
-echo -e "------>> 警告：面板未安装证书进行SSL保护"
-echo -e "------>> 为非默认admin账号/密码，请牢记"
-echo -e "port（端口号）: ${red}5321${plain}"
-echo -e "webBasePath（访问路径）: ${red}/a/${plain}"
-echo -e "PS：为安全起见，不显示账号和密码"
-echo -e "若您已经忘记账号/密码，请用脚本选项〔6〕重新设置"
-echo -e "--------------------------------------------------"
-if [[ -n $ipv4 ]]; then
-    echo -e "面板 IPv4 访问地址------>> ${green}http://$ipv4:5321/a/${plain}"
-fi
-if [[ -n $ipv6 ]]; then
-    echo -e "面板 IPv6 访问地址------>> ${green}http://[$ipv6]:5321/a/${plain}"
-fi
-echo -e "----------------------->> ${yellow}账号: ${green}sinian${plain}"
-echo -e "----------------------->> ${yellow}密码: ${green}sinian${plain}"
-echo -e "----------------------->> ${yellow}端口号: ${green}5321${plain}"
-echo -e "----------------------->> ${yellow}访问路径: ${green}/a/${plain}"
-echo -e "------>> 若您忘记了上述面板信息，后期可通过${yellow}x-ui${plain}命令进入脚本输入数字〔10〕选项获取"
-echo -e ">>>>>>>>注：若您安装了〔证书〕，请把IP换成您的域名用https方式登录"
-echo -e "--------------------------------------------------"
-echo -e "请确保 ${red}5321${plain} 端口已打开放行"
-echo -e "请自行确保此端口没有被其他程序占用"
-echo -e "若要登录访问面板，请复制上面的地址到浏览器"
-echo -e "--------------------------------------------------"
-echo -e "${yellow}服务器推荐：https://my.frantech.ca/aff.php?aff=4337${plain}"
-echo -e "${yellow}VPS评测官方网站：${red} https://www.1373737.xyz/${plain}"
+sleep 4
+info=$(/usr/local/x-ui/x-ui setting -show true)
+echo -e "${info}${plain}"
+echo ""
+echo -e "若您忘记了上述面板信息，后期可通过x-ui命令进入脚本${red}输入数字〔10〕选项获取${plain}"
+echo ""
 echo -e "----------------------------------------------"
-echo -e "${green}〔3X-UI〕优化版项目地址：${yellow}https://github.com/sinian-liu/3x-ui${plain}"
-echo -e "${green}服务器购买：${yellow}https://www.1373737.xyz/${plain}"
+echo ""
+sleep 2
+echo -e "${green}安装/更新完成，若在使用过程中有任何问题${plain}"
+echo -e "${yellow}请先描述清楚所遇问题加〔3X-UI〕中文交流群${plain}"
+echo -e "${yellow}在TG群中${red} https://t.me/XUI_CN ${yellow}截图进行反馈${plain}"
+echo ""
 echo -e "----------------------------------------------"
-echo -e "${green}3X-UI 搭建完成！${plain}"
-echo -e "请访问服务器 IP 的 ${red}5321${plain} 端口进行管理"
+echo ""
+echo -e "${green}〔3X-UI〕优化版项目地址：${yellow}https://github.com/huiyio/3x-ui${plain}" 
+echo ""
+echo -e "${green} 详细安装教程：${yellow}https://huiyio.github.io/xufei/2024/05/3x-ui/${plain}"
+echo ""
 echo -e "----------------------------------------------"
+echo ""
